@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Responses - {{ form.title }} - Mind Cloud Forms{% endblock %}
+
+{% block header_nav %}
+<a href="/builder/{{ form.id }}" class="btn btn-ghost">Edit Form</a>
+<a href="/f/{{ form.id }}" class="btn btn-ghost" target="_blank">View Form</a>
+{% if responses %}
+<button onclick="exportResponses('{{ form.id }}')" class="btn btn-primary">Export CSV</button>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <h1>{{ form.title }}</h1>
+        <p>Responses collected from your form</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value">{{ responses|length }}</div>
+            <div class="stat-label">Total Responses</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">{{ form.fields|length }}</div>
+            <div class="stat-label">Fields</div>
+        </div>
+    </div>
+
+    {% if responses %}
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Submitted</th>
+                    {% for field in form.fields %}
+                    <th>{{ field.label }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for response in responses|reverse %}
+                <tr>
+                    <td>
+                        {% set dt = response.submitted_at %}
+                        {{ dt[:10] if dt else 'N/A' }}
+                    </td>
+                    {% for field in form.fields %}
+                    <td>
+                        {% set answer = response.answers.get(field.id, '') %}
+                        {% if answer is iterable and answer is not string %}
+                            {{ answer | join(', ') }}
+                        {% else %}
+                            {{ answer }}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">&empty;</div>
+        <h3>No responses yet</h3>
+        <p style="margin-bottom: 1.5rem;">Share your form to start collecting responses.</p>
+        <div class="card" style="max-width: 500px; margin: 0 auto; text-align: left;">
+            <label class="form-label">Share this link</label>
+            <div style="display: flex; gap: 0.5rem;">
+                <input type="text" class="form-input" readonly
+                       value="{{ request.url_for('public_form', form_id=form.id) }}"
+                       id="share-link"
+                       style="flex: 1;">
+                <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('share-link').value); this.textContent = 'Copied!'; setTimeout(() => this.textContent = 'Copy', 2000);">
+                    Copy
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form %}Edit Form{% else %}Create Form{% endif %} - Mind Cloud Forms{% endblock %}
+
+{% block header_nav %}
+<button id="preview-form" class="btn btn-ghost">Preview</button>
+<button id="save-form" class="btn btn-primary">Save Form</button>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Form Settings -->
+    <div style="margin-bottom: 2rem;">
+        <input type="text" id="form-title" class="form-input"
+               value="{{ form.title if form else 'Untitled Form' }}"
+               placeholder="Form Title"
+               style="font-family: var(--font-serif); font-style: italic; font-size: 2rem; background: transparent; border: none; padding: 0; margin-bottom: 0.5rem;">
+        <textarea id="form-description" class="form-input"
+                  placeholder="Form description (optional)"
+                  rows="2"
+                  style="background: transparent; border: none; padding: 0; resize: none; color: var(--text-secondary);">{{ form.description if form else '' }}</textarea>
+    </div>
+
+    <div class="builder-layout">
+        <!-- Fields List (Preview) -->
+        <div class="builder-preview">
+            <div id="fields-list"></div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="builder-sidebar">
+            <!-- Add Fields -->
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; font-size: 1rem; font-style: normal;">Add Field</h3>
+                <div class="field-types">
+                    <button class="field-type-btn" data-type="text">
+                        <span class="field-type-icon">T</span>
+                        <span>Text Input</span>
+                    </button>
+                    <button class="field-type-btn" data-type="textarea">
+                        <span class="field-type-icon">&para;</span>
+                        <span>Long Text</span>
+                    </button>
+                    <button class="field-type-btn" data-type="email">
+                        <span class="field-type-icon">@</span>
+                        <span>Email</span>
+                    </button>
+                    <button class="field-type-btn" data-type="number">
+                        <span class="field-type-icon">#</span>
+                        <span>Number</span>
+                    </button>
+                    <button class="field-type-btn" data-type="select">
+                        <span class="field-type-icon">&darr;</span>
+                        <span>Dropdown</span>
+                    </button>
+                    <button class="field-type-btn" data-type="radio">
+                        <span class="field-type-icon">&cir;</span>
+                        <span>Multiple Choice</span>
+                    </button>
+                    <button class="field-type-btn" data-type="checkbox">
+                        <span class="field-type-icon">&square;</span>
+                        <span>Checkboxes</span>
+                    </button>
+                    <button class="field-type-btn" data-type="date">
+                        <span class="field-type-icon">&equiv;</span>
+                        <span>Date</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Field Editor -->
+            <div class="card">
+                <div id="field-editor">
+                    <div class="text-muted text-center" style="padding: 1rem;">
+                        Select a field to edit its properties
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.EXISTING_FORM = {{ form | tojson | safe if form else 'null' }};
+</script>
+{% endblock %}

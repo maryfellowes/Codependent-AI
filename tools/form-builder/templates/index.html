@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mind Cloud Forms{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <h1>Your Forms</h1>
+        <p>Create, manage, and collect responses from your custom forms.</p>
+    </div>
+
+    {% if forms %}
+    <div class="grid grid-2">
+        {% for form in forms %}
+        <div class="card animate-in" style="animation-delay: {{ loop.index * 0.05 }}s;">
+            <div class="card-header">
+                <div>
+                    <h3 class="card-title">{{ form.title }}</h3>
+                    <p class="card-meta">{{ form.fields|length }} field{% if form.fields|length != 1 %}s{% endif %}</p>
+                </div>
+            </div>
+
+            {% if form.description %}
+            <p style="font-size: 0.9rem; margin-bottom: 1rem;">{{ form.description[:100] }}{% if form.description|length > 100 %}...{% endif %}</p>
+            {% endif %}
+
+            <div class="card-actions">
+                <a href="/builder/{{ form.id }}" class="btn btn-secondary btn-sm">Edit</a>
+                <a href="/f/{{ form.id }}" class="btn btn-ghost btn-sm" target="_blank">View</a>
+                <a href="/responses/{{ form.id }}" class="btn btn-ghost btn-sm">Responses</a>
+                <button onclick="deleteForm('{{ form.id }}')" class="btn btn-ghost btn-sm" style="color: var(--error);">Delete</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">\ud83d\udcdd</div>
+        <h3>No forms yet</h3>
+        <p style="margin-bottom: 1.5rem;">Create your first form to start collecting responses.</p>
+        <a href="/builder" class="btn btn-primary btn-lg">Create Your First Form</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

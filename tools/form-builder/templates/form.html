@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ form.title }} - Mind Cloud Forms</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container-narrow">
+        <!-- Form Header -->
+        <div class="form-hero">
+            <h1>{{ form.title }}</h1>
+            {% if form.description %}
+            <p>{{ form.description }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Form -->
+        <form id="public-form" data-form-id="{{ form.id }}">
+            {% for field in form.fields %}
+            <div class="form-group animate-in" style="animation-delay: {{ loop.index * 0.05 }}s;">
+                <label class="form-label">
+                    {{ field.label }}
+                    {% if field.required %}
+                    <span class="text-accent">*</span>
+                    {% else %}
+                    <span class="form-label-optional">(optional)</span>
+                    {% endif %}
+                </label>
+
+                {% if field.type == 'text' %}
+                <input type="text"
+                       name="{{ field.id }}"
+                       class="form-input"
+                       placeholder="{{ field.placeholder or '' }}"
+                       {{ 'required' if field.required else '' }}>
+
+                {% elif field.type == 'textarea' %}
+                <textarea name="{{ field.id }}"
+                          class="form-textarea"
+                          placeholder="{{ field.placeholder or '' }}"
+                          {{ 'required' if field.required else '' }}></textarea>
+
+                {% elif field.type == 'email' %}
+                <input type="email"
+                       name="{{ field.id }}"
+                       class="form-input"
+                       placeholder="{{ field.placeholder or 'email@example.com' }}"
+                       {{ 'required' if field.required else '' }}>
+
+                {% elif field.type == 'number' %}
+                <input type="number"
+                       name="{{ field.id }}"
+                       class="form-input"
+                       placeholder="{{ field.placeholder or '0' }}"
+                       {{ 'required' if field.required else '' }}>
+
+                {% elif field.type == 'date' %}
+                <input type="date"
+                       name="{{ field.id }}"
+                       class="form-input"
+                       {{ 'required' if field.required else '' }}>
+
+                {% elif field.type == 'select' %}
+                <select name="{{ field.id }}"
+                        class="form-select"
+                        {{ 'required' if field.required else '' }}>
+                    <option value="">Select an option...</option>
+                    {% for option in field.options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+
+                {% elif field.type == 'radio' %}
+                {% for option in field.options %}
+                <label class="form-check">
+                    <input type="radio"
+                           name="{{ field.id }}"
+                           value="{{ option }}"
+                           {{ 'required' if field.required and loop.first else '' }}>
+                    <span class="form-check-label">{{ option }}</span>
+                </label>
+                {% endfor %}
+
+                {% elif field.type == 'checkbox' %}
+                {% for option in field.options %}
+                <label class="form-check">
+                    <input type="checkbox"
+                           name="{{ field.id }}"
+                           value="{{ option }}">
+                    <span class="form-check-label">{{ option }}</span>
+                </label>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                    Submit
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="text-muted" style="font-size: 0.85rem;">
+                Powered by <a href="/" style="color: var(--text-secondary);">Mind Cloud Forms</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
