@@ -1,0 +1,48 @@
+{
+  "mcpServers": {
+    "vault-search": {
+      "command": "python",
+      "args": [
+        "/full/path/to/vault_mcp_server.py"
+      ],
+      "env": {}
+    }
+  }
+}
+
+IMPORTANT NOTES:
+
+1. Replace "/full/path/to/vault_mcp_server.py" with the ACTUAL full path
+   Examples:
+   - Windows: "C:\\Users\\YourName\\vault-archive-product\\vault_mcp_server.py"
+   - Mac: "/Users/yourname/vault-archive-product/vault_mcp_server.py"
+   - Linux: "/home/yourname/vault-archive-product/vault_mcp_server.py"
+
+2. Make sure search_daemon.py is RUNNING before starting Claude Desktop
+   Start it with: python search_daemon.py
+
+3. Your actual Claude Desktop config is located at:
+   - Windows: %APPDATA%\Claude\claude_desktop_config.json
+   - Mac: ~/Library/Application Support/Claude/claude_desktop_config.json
+   - Linux: ~/.config/Claude/claude_desktop_config.json
+
+4. Add the "vault-search" section to your existing config's "mcpServers" object
+   Don't replace the entire file - just add this server to the list
+
+5. Restart Claude Desktop COMPLETELY after adding this config
+   (Quit the app entirely, then reopen)
+
+Example of complete config file with multiple MCP servers:
+
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:\\allowed\\path"]
+    },
+    "vault-search": {
+      "command": "python",
+      "args": ["C:\\Users\\YourName\\vault-archive-product\\vault_mcp_server.py"]
+    }
+  }
+}
